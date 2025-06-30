@@ -1,0 +1,32 @@
+.vote-container {
+  margin-left: 250px; /* espacio para el navbar */
+  padding: 40px;
+  font-family: var(--fuente-principal);
+}
+
+.lista-card {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.lista-card h3 {
+  margin: 0 0 10px 0;
+}
+
+.lista-card button {
+  background-color: var(--azul-bandera);
+  color: var(--blanco);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.lista-card button:hover {
+  background-color: var(--amarillo-sol);
+  color: var(--azul-bandera);
+}

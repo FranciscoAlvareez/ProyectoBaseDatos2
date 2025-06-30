@@ -1,0 +1,26 @@
+:root {
+  --azul-bandera: #0033A0;         /* Botones principales, header */
+  --gris-claro: #F5F7FA;           /* Fondos suaves */
+  --gris-oscuro: #2E2E2E;          /* Texto principal */
+  --amarillo-sol: #FFD100;         /* Hover / acentos */
+  --blanco: #FFFFFF;               /* Fondo base */
+  --verde-exito: #2ECC71;          /* Confirmaciones, éxito */
+  --rojo-alerta: #E74C3C;          /* Errores, alertas */
+
+  --radio: 8px;
+  --transicion: all 0.3s ease;
+  --fuente-principal: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
