@@ -1,0 +1,26 @@
+.home-container {
+  margin-left: 220px;
+  padding: 40px;
+  font-family: var(--fuente-principal);
+  background-color: var(--gris-claro);
+  min-height: 100vh;
+  color: var(--negro);
+}
+
+.home-container h1 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: var(--azul-bandera);
+  border-bottom: 2px solid var(--amarillo-sol);
+  padding-bottom: 10px;
+}
+
+.home-container p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  background-color: var(--blanco);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
