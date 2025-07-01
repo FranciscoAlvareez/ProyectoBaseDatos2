@@ -203,7 +203,7 @@ const ManageCircuit = () => {
 
   return (
     <div className="manage-circuit-container">
-      <h2>Gestión de Circuitos - Debug Version</h2>
+      <h2>Gestión de Circuitos</h2>
 
       {loading && <div className="loading-message">Cargando...</div>}
       {error && <div className="error-message">{error}</div>}
