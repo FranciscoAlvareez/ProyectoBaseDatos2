@@ -9,7 +9,8 @@ const ManageCircuit = () => {
   const [error, setError] = useState("");
   const [circuitosVisibles, setCircuitosVisibles] = useState({});
   const [resultadosVisibles, setResultadosVisibles] = useState({});
-
+  // Nuevo estado para controlar la vista por partido
+  const [vistaPorPartido, setVistaPorPartido] = useState({});
 
   const toggleResultados = async (idCircuito) => {
     // Si ya están visibles, los ocultamos
@@ -87,7 +88,7 @@ const ManageCircuit = () => {
       setLoading(false);
     }
   };
-  
+
   const fetchCircuitos = async (idEst) => {
     setLoading(true);
     setError("");
@@ -120,6 +121,60 @@ const ManageCircuit = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Función para alternar entre vista por lista y por partido
+  const toggleVistaPorPartido = (idCircuito) => {
+    setVistaPorPartido((prev) => ({
+      ...prev,
+      [idCircuito]: !prev[idCircuito],
+    }));
+  };
+
+  // Función para procesar resultados según la vista seleccionada
+  const procesarResultados = (resultadosCircuito, porPartido = false) => {
+    return resultadosCircuito.reduce((acc, r) => {
+      let lista, partido, clave;
+
+      // Clasificamos el voto
+      if (r.es_valido === 0) {
+        lista = "Anulado";
+        partido = "Anulado";
+        clave = porPartido ? "Anulado" : "Anulado-Anulado";
+      } else if (r.en_blanco === 1) {
+        lista = "En Blanco";
+        partido = "En Blanco";
+        clave = porPartido ? "En Blanco" : "En Blanco-En Blanco";
+      } else if (r.es_valido !== 0 && r.en_blanco !== 1) {
+        lista = r.lista || "Sin Lista";
+        partido = r.partido || "Sin Partido";
+
+        if (porPartido) {
+          // Para vista por partido, agrupamos por id_partido o partido
+          clave = r.id_partido ? `partido_${r.id_partido}` : partido;
+        } else {
+          // Para vista por lista, mantenemos la lógica original
+          clave = `${lista}-${partido}`;
+        }
+      } else {
+        lista = "Otros";
+        partido = "Otros";
+        clave = porPartido ? "Otros" : "Otros-Otros";
+      }
+
+      if (acc[clave]) {
+        acc[clave].votos += r.votos;
+      } else {
+        acc[clave] = {
+          lista: porPartido ? "" : lista, // En vista por partido no mostramos lista
+          partido: partido,
+          votos: r.votos,
+          id_partido: r.id_partido || null,
+        };
+      }
+
+      return acc;
+    }, {});
   };
 
   return (
@@ -184,11 +239,43 @@ const ManageCircuit = () => {
 
                         {resultadosVisibles[c.id] && resultados[c.id] && (
                           <div className="resultados-list">
-                            <h5>Resultados:</h5>
+                            <div
+                              style={{
+                                display: "flex",
+                                gap: "10px",
+                                marginBottom: "15px",
+                                alignItems: "center",
+                                borderBottom: "1px solid #ddd",
+                                paddingBottom: "10px",
+                              }}
+                            >
+                              <h5 style={{ margin: 0 }}>Resultados:</h5>
+                              <button
+                                onClick={() => toggleVistaPorPartido(c.id)}
+                                className="toggle-view-button"
+                                style={{
+                                  padding: "8px 15px",
+                                  backgroundColor: vistaPorPartido[c.id]
+                                    ? "#28a745"
+                                    : "#007bff",
+                                  color: "white",
+                                  border: "none",
+                                  borderRadius: "5px",
+                                  cursor: "pointer",
+                                  fontSize: "14px",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {vistaPorPartido[c.id]
+                                  ? "📊 Ver por Lista"
+                                  : "🏛️ Ver por Partido"}
+                              </button>
+                            </div>
+
                             <table className="tabla-resultados">
                               <thead>
                                 <tr>
-                                  <th>Lista </th>
+                                  {!vistaPorPartido[c.id] && <th>Lista</th>}
                                   <th>Partido</th>
                                   <th>Cant. Votos</th>
                                   <th>Porcentaje</th>
@@ -196,57 +283,14 @@ const ManageCircuit = () => {
                               </thead>
                               <tbody>
                                 {(() => {
-                                  // Primero agrupamos los resultados usando los atributos booleanos
-                                  const resultadosAgrupados = resultados[
-                                    c.id
-                                  ].reduce((acc, r) => {
-                                    let lista, partido;
+                                  const resultadosAgrupados =
+                                    procesarResultados(
+                                      resultados[c.id],
+                                      vistaPorPartido[c.id]
+                                    );
 
-                                    // Usamos los atributos booleanos para clasificar
-                                    if (r.es_valido === 0) {
-                                      // Voto anulado (es_valido = 0)
-                                      lista = "Anulado";
-                                      partido = "Anulado";
-                                    } else if (r.en_blanco === 1) {
-                                      // Voto en blanco (en_blanco = 1)
-                                      lista = "En Blanco";
-                                      partido = "En Blanco";
-                                    } else if (
-                                      r.es_valido !== 0 &&
-                                      r.en_blanco !== 1
-                                    ) {
-                                      // Voto válido normal (es_valido != 0 AND en_blanco != 1)
-                                      lista = r.lista || "Sin Lista";
-                                      partido = r.partido || "Sin Partido";
-                                    } else {
-                                      // Caso fallback (por si acaso)
-                                      lista = "Otros";
-                                      partido = "Otros";
-                                    }
-
-                                    // Usamos una clave única para agrupar
-                                    const clave = `${lista}-${partido}`;
-
-                                    if (acc[clave]) {
-                                      // Si ya existe, sumamos los votos
-                                      acc[clave].votos += r.votos;
-                                    } else {
-                                      // Si no existe, lo creamos
-                                      acc[clave] = {
-                                        lista: lista,
-                                        partido: partido,
-                                        votos: r.votos,
-                                      };
-                                    }
-
-                                    return acc;
-                                  }, {});
-
-                                  // Convertimos el objeto a array
                                   const resultadosArray =
                                     Object.values(resultadosAgrupados);
-
-                                  // Calculamos el total de votos
                                   const totalVotos = resultadosArray.reduce(
                                     (sum, r) => sum + r.votos,
                                     0
@@ -261,7 +305,9 @@ const ManageCircuit = () => {
 
                                     return (
                                       <tr key={index}>
-                                        <td>{r.lista}</td>
+                                        {!vistaPorPartido[c.id] && (
+                                          <td>{r.lista}</td>
+                                        )}
                                         <td>{r.partido}</td>
                                         <td>{r.votos}</td>
                                         <td>{porcentaje}</td>
