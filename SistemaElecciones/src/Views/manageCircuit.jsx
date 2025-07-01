@@ -65,7 +65,7 @@ const ManageCircuit = () => {
       {error && <div className="error-message">{error}</div>}
 
       <button onClick={fetchEstablecimientos} className="load-button">
-        Cargar Establecimientos
+        Establecimientos
       </button>
 
       {establecimientos.length > 0 && (
@@ -79,7 +79,7 @@ const ManageCircuit = () => {
                 <small>
                   {est.calle} {est.nro_puerta} - CP: {est.cod_postal}
                   <br />
-                  ID: {est.id_establecimiento}
+                  Circuito #{est.id_establecimiento}
                 </small>
               </div>
 
@@ -87,7 +87,7 @@ const ManageCircuit = () => {
                 onClick={() => fetchCircuitos(est.id_establecimiento)}
                 className="view-circuitos-button"
               >
-                Ver Circuitos (ID: {est.id_establecimiento})
+                Ver Circuitos
               </button>
 
               {circuitos[est.id_establecimiento] && (
