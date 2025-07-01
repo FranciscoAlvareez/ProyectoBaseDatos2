@@ -3,28 +3,15 @@ dotenv.config();
 import bcrypt from "bcrypt";
 import db from "./Config/db.js";
 
-// Lista de usuarios con credencial, contraseña y rol
-const usuarios = [
-  {
-    credencial: "OBB 30452",
-    contraseña: "30452",
-    idRol: 1 // admin
-  },
-  {
-    credencial: "ABC 12345",
-    contraseña: "12345",
-    idRol: 2 // gestor
-  },
-  {
-    credencial: "OBC 43256",
-    contraseña: "43256",
-    idRol: 3 // ciudadano
-  }
-];
-
-const insertarUsuarioConRol = async ({ credencial, contraseña, idRol }) => {
+const insertarUsuarioCompleto = async ({ credencial, contraseña, idRol, nombre, apellido }) => {
   try {
     const hash = await bcrypt.hash(contraseña, 10);
+
+    // Insertar en CIUDADANO
+    await db.execute(
+      "INSERT INTO CIUDADANO (credencial, ci, fecha_nac, nombre, apellido_paterno, apellido_materno) VALUES (?, ?, ?, ?, ?, ?)",
+      [credencial, contraseña, "2000-01-01", nombre, apellido, "Test"]
+    );
 
     // Insertar en USUARIOS
     await db.execute(
@@ -45,11 +32,40 @@ const insertarUsuarioConRol = async ({ credencial, contraseña, idRol }) => {
 };
 
 const run = async () => {
-  for (const usuario of usuarios) {
-    await insertarUsuarioConRol(usuario);
+  // Insertar admin
+  await insertarUsuarioCompleto({
+    credencial: "ADM 10000",
+    contraseña: "10000",
+    idRol: 1,
+    nombre: "Admin",
+    apellido: "Sistema"
+  });
+
+  // Insertar 20 gestores
+  for (let i = 1; i <= 20; i++) {
+    const numero = 20000 + i;
+    await insertarUsuarioCompleto({
+      credencial: `GST ${numero}`,
+      contraseña: `${numero}`,
+      idRol: 2,
+      nombre: `Gestor${i}`,
+      apellido: `ApellidoG${i}`
+    });
   }
 
-  process.exit(); // cerrar conexión
+  // Insertar 50 ciudadanos
+  for (let i = 1; i <= 50; i++) {
+    const numero = 30000 + i;
+    await insertarUsuarioCompleto({
+      credencial: `CID ${numero}`,
+      contraseña: `${numero}`,
+      idRol: 3,
+      nombre: `Ciudadano${i}`,
+      apellido: `ApellidoC${i}`
+    });
+  }
+
+  process.exit();
 };
 
 run();

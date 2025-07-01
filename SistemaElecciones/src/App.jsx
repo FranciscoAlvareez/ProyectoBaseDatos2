@@ -8,6 +8,7 @@ import Navbar from "./Views/navbar";
 import "./Styles/globalConfig.css";
 import RegisterVoter from './Views/registerVoter';
 import Vote from "./Views/vote";
+import VoteObserved from "./Views/voteObserved";
 
 function LayoutWithNavbar({ children }) {
   const { user } = useAuth();
@@ -32,14 +33,18 @@ function App() {
               </ProtectedRoute>
             } />
             <Route
-              path="/votar"
-              element={
-                <ProtectedRoute role={["gestor", "ciudadano"]}>
+              path="/votar" element={
+                <ProtectedRoute allowedRoles={["gestor", "ciudadano"]}>
                   <Vote />
                 </ProtectedRoute>
               }/>
+            <Route path="/votoObservado" element={
+                <ProtectedRoute allowedRoles={["gestor"]}>
+                  <VoteObserved />
+                </ProtectedRoute>
+            }/>
             <Route path="/votar" element={
-              <ProtectedRoute role="admin">
+              <ProtectedRoute allowedRoles="admin">
                 <RegisterVoter />
               </ProtectedRoute>
             } />

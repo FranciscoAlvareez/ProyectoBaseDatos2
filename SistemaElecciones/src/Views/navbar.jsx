@@ -29,6 +29,7 @@ const Navbar = () => {
         {/* Links adicionales para gestor */}
         {rol === "gestor" && (
           <>
+            <li><Link to="/votoObservado">Registrar Voto Observado</Link></li>
             <li><Link to="/gestionarMesas">Gestionar Mesas</Link></li>
             <li><Link to="/reconteo">Reconteo Rápido</Link></li>
           </>
