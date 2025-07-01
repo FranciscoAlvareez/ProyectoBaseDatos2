@@ -9,8 +9,8 @@ const ManageCircuit = () => {
   const [error, setError] = useState("");
   const [circuitosVisibles, setCircuitosVisibles] = useState({});
   const [resultadosVisibles, setResultadosVisibles] = useState({});
-  // Nuevo estado para controlar la vista por partido
-  const [vistaPorPartido, setVistaPorPartido] = useState({});
+  // Nuevo estado para controlar el tipo de vista: 'lista', 'partido', 'candidato'
+  const [tipoVista, setTipoVista] = useState({});
 
   const toggleResultados = async (idCircuito) => {
     // Si ya están visibles, los ocultamos
@@ -123,53 +123,77 @@ const ManageCircuit = () => {
     }
   };
 
-  // Función para alternar entre vista por lista y por partido
-  const toggleVistaPorPartido = (idCircuito) => {
-    setVistaPorPartido((prev) => ({
-      ...prev,
-      [idCircuito]: !prev[idCircuito],
-    }));
+  // Función para cambiar el tipo de vista
+  const cambiarTipoVista = (idCircuito) => {
+    setTipoVista((prev) => {
+      const actual = prev[idCircuito] || "lista";
+      let siguiente;
+
+      if (actual === "lista") {
+        siguiente = "partido";
+      } else if (actual === "partido") {
+        siguiente = "candidato";
+      } else {
+        siguiente = "lista";
+      }
+
+      return { ...prev, [idCircuito]: siguiente };
+    });
   };
 
   // Función para procesar resultados según la vista seleccionada
-  const procesarResultados = (resultadosCircuito, porPartido = false) => {
+  const procesarResultados = (resultadosCircuito, tipoVista = "lista") => {
     return resultadosCircuito.reduce((acc, r) => {
-      let lista, partido, clave;
+      let lista, partido, candidato, clave;
 
       // Clasificamos el voto
       if (r.es_valido === 0) {
         lista = "Anulado";
         partido = "Anulado";
-        clave = porPartido ? "Anulado" : "Anulado-Anulado";
+        candidato = "Anulado";
+        clave = "Anulado";
       } else if (r.en_blanco === 1) {
         lista = "En Blanco";
         partido = "En Blanco";
-        clave = porPartido ? "En Blanco" : "En Blanco-En Blanco";
+        candidato = "En Blanco";
+        clave = "En Blanco";
       } else if (r.es_valido !== 0 && r.en_blanco !== 1) {
         lista = r.lista || "Sin Lista";
         partido = r.partido || "Sin Partido";
 
-        if (porPartido) {
-          // Para vista por partido, agrupamos por id_partido o partido
+        // Concatenamos nombre y apellido del candidato
+        const nombreCompleto =
+          r.candidato && r.candidato_apellido
+            ? `${r.candidato} ${r.candidato_apellido}`
+            : r.candidato || "Sin Candidato";
+        candidato = nombreCompleto;
+
+        if (tipoVista === "partido") {
           clave = r.id_partido ? `partido_${r.id_partido}` : partido;
+        } else if (tipoVista === "candidato") {
+          clave = r.credencial_candidato
+            ? `candidato_${r.credencial_candidato}`
+            : candidato;
         } else {
-          // Para vista por lista, mantenemos la lógica original
           clave = `${lista}-${partido}`;
         }
       } else {
         lista = "Otros";
         partido = "Otros";
-        clave = porPartido ? "Otros" : "Otros-Otros";
+        candidato = "Otros";
+        clave = "Otros";
       }
 
       if (acc[clave]) {
         acc[clave].votos += r.votos;
       } else {
         acc[clave] = {
-          lista: porPartido ? "" : lista, // En vista por partido no mostramos lista
+          lista: tipoVista === "lista" ? lista : "",
           partido: partido,
+          candidato: tipoVista === "candidato" ? candidato : "",
           votos: r.votos,
           id_partido: r.id_partido || null,
+          credencial_candidato: r.credencial_candidato || null,
         };
       }
 
@@ -251,13 +275,17 @@ const ManageCircuit = () => {
                             >
                               <h5 style={{ margin: 0 }}>Resultados:</h5>
                               <button
-                                onClick={() => toggleVistaPorPartido(c.id)}
+                                onClick={() => cambiarTipoVista(c.id)}
                                 className="toggle-view-button"
                                 style={{
                                   padding: "8px 15px",
-                                  backgroundColor: vistaPorPartido[c.id]
-                                    ? "#28a745"
-                                    : "#007bff",
+                                  backgroundColor:
+                                    (tipoVista[c.id] || "lista") === "lista"
+                                      ? "#007bff"
+                                      : (tipoVista[c.id] || "lista") ===
+                                        "partido"
+                                      ? "#28a745"
+                                      : "#dc3545",
                                   color: "white",
                                   border: "none",
                                   borderRadius: "5px",
@@ -266,27 +294,36 @@ const ManageCircuit = () => {
                                   fontWeight: "bold",
                                 }}
                               >
-                                {vistaPorPartido[c.id]
-                                  ? "📊 Ver por Lista"
-                                  : "🏛️ Ver por Partido"}
+                                {(tipoVista[c.id] || "lista") === "lista" &&
+                                  "📊 Ver por Partido"}
+                                {(tipoVista[c.id] || "lista") === "partido" &&
+                                  "👤 Ver por Candidato"}
+                                {(tipoVista[c.id] || "lista") === "candidato" &&
+                                  "📝 Ver por Lista"}
                               </button>
                             </div>
 
                             <table className="tabla-resultados">
                               <thead>
                                 <tr>
-                                  {!vistaPorPartido[c.id] && <th>Lista</th>}
+                                  {(tipoVista[c.id] || "lista") === "lista" && (
+                                    <th>Lista</th>
+                                  )}
                                   <th>Partido</th>
+                                  {(tipoVista[c.id] || "lista") ===
+                                    "candidato" && <th>Candidato</th>}
                                   <th>Cant. Votos</th>
                                   <th>Porcentaje</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 {(() => {
+                                  const vistaActual =
+                                    tipoVista[c.id] || "lista";
                                   const resultadosAgrupados =
                                     procesarResultados(
                                       resultados[c.id],
-                                      vistaPorPartido[c.id]
+                                      vistaActual
                                     );
 
                                   const resultadosArray =
@@ -305,10 +342,13 @@ const ManageCircuit = () => {
 
                                     return (
                                       <tr key={index}>
-                                        {!vistaPorPartido[c.id] && (
+                                        {vistaActual === "lista" && (
                                           <td>{r.lista}</td>
                                         )}
                                         <td>{r.partido}</td>
+                                        {vistaActual === "candidato" && (
+                                          <td>{r.candidato}</td>
+                                        )}
                                         <td>{r.votos}</td>
                                         <td>{porcentaje}</td>
                                       </tr>
