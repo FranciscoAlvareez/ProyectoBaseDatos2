@@ -145,7 +145,6 @@ const ManageCircuit = () => {
   const procesarResultados = (resultadosCircuito, tipoVista = "lista") => {
     return resultadosCircuito.reduce((acc, r) => {
       let lista, partido, candidato, clave;
-
       // Clasificamos el voto
       if (r.es_valido === 0) {
         lista = "Anulado";
