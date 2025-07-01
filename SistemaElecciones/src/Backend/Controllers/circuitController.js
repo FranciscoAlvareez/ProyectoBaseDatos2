@@ -25,7 +25,7 @@ export const getResultadosByCircuito = async (req, res) => {
         L.nombre AS lista,
         COUNT(*) AS votos
       FROM VOTO V
-      LEFT JOIN LISTA L ON V.id_lista = L.numero
+      LEFT JOIN LISTA L ON V.nro_lista = L.numero
       LEFT JOIN PARTIDO P ON L.id_partido = P.id
       WHERE V.id_circuito = ?
       GROUP BY P.nombre, L.nombre WITH ROLLUP

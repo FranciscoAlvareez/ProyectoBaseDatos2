@@ -3,7 +3,7 @@ import db from "../Config/db.js";
 export const getEstablecimientos = async (req, res) => {
   try {
     const [rows] = await db.execute(`
-      SELECT nombre_establecimiento
+      SELECT id_establecimiento, nombre_establecimiento, cod_postal, calle, nro_puerta
       FROM ESTABLECIMIENTO
     `);
 
