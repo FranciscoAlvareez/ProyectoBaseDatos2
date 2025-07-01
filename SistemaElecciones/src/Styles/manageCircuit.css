@@ -1,0 +1,61 @@
+/* Styles/manageCircuit.css */
+
+.container {
+    max-width: 800px;
+    margin: 100px auto 40px auto; /* 100px de margen arriba por el navbar */
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  h2 {
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    text-align: center;
+  }
+  
+  .btn {
+    display: block;
+    margin: 0 auto;
+    background-color: #2980b9;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn:hover {
+    background-color: #1f5f8b;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+    background-color: #fdfdfd;
+  }
+  
+  .table th,
+  .table td {
+    border: 1px solid #ccc;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  .table th {
+    background-color: #ecf0f1;
+    font-weight: bold;
+  }
+  
+  .no-data {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-style: italic;
+    color: #7f8c8d;
+  }
+  

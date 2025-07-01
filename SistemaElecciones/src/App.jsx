@@ -8,6 +8,7 @@ import Navbar from "./Views/navbar";
 import "./Styles/globalConfig.css";
 import RegisterVoter from './Views/registerVoter';
 import Vote from "./Views/vote";
+import ManageCircuit from './Views/manageCircuit';
 
 function LayoutWithNavbar({ children }) {
   const { user } = useAuth();
@@ -43,6 +44,11 @@ function App() {
                 <RegisterVoter />
               </ProtectedRoute>
             } />
+            <Route path="admin/circuitos" element={
+              <ProtectedRoute role="admin">
+                <ManageCircuit />
+              </ProtectedRoute>
+            }/>
             <Route path="/unauthorized" element={<p>No autorizado</p>} />
           </Routes>
         </LayoutWithNavbar>
