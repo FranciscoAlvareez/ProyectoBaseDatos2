@@ -1,102 +1,258 @@
-/* Centro general del contenedor */
 .manage-circuit-container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Título principal */
 .manage-circuit-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
   color: #333;
-}
-
-/* Estilos para loading y error */
-.loading-message,
-.error-message {
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   text-align: center;
 }
 
 .loading-message {
   background-color: #e3f2fd;
-  border: 1px solid #2196f3;
+  color: #1976d2;
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin: 15px 0;
+  text-align: center;
+  border-left: 4px solid #1976d2;
 }
 
 .error-message {
   background-color: #ffebee;
-  border: 1px solid #f44336;
-  color: #d32f2f;
+  color: #c62828;
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin: 15px 0;
+  text-align: center;
+  border-left: 4px solid #c62828;
 }
 
-/* Botón principal */
 .load-button {
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  display: block;
-  margin: 0 auto 20px;
-}
-
-/* Establecimientos */
-.establecimiento-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 20px;
-  background-color: #f9f9f9;
-}
-
-.establecimiento-info {
-  margin-bottom: 10px;
-}
-
-.view-circuitos-button {
-  padding: 8px 16px;
   background-color: #2196f3;
   color: white;
   border: none;
-  border-radius: 4px;
+  padding: 12px 24px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  display: block;
+  margin: 0 auto 30px;
 }
 
-/* Circuitos */
+.load-button:hover {
+  background-color: #1976d2;
+}
+
+/* Establecimiento Cards */
+.establecimiento-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s;
+}
+
+.establecimiento-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.establecimiento-info {
+  margin-bottom: 15px;
+}
+
+.establecimiento-info strong {
+  font-size: 18px;
+  color: #333;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.establecimiento-info small {
+  color: #666;
+  line-height: 1.4;
+}
+
+.view-circuitos-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.view-circuitos-button:hover {
+  background-color: #388e3c;
+}
+
+/* Circuito List */
+.circuito-list {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.circuito-list h4 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+/* Circuito Cards */
 .circuito-card {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: white;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.circuito-card p {
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.circuito-card strong {
+  color: #333;
+  font-size: 15px;
 }
 
 .ver-resultados-button {
-  padding: 6px 12px;
   background-color: #ff9800;
   color: white;
   border: none;
+  padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 8px;
+  font-size: 13px;
+  transition: background-color 0.2s;
+}
+
+.ver-resultados-button:hover {
+  background-color: #f57c00;
 }
 
 /* Resultados */
 .resultados-list {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ccc;
+}
+
+.resultados-list h5 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Tabla de Resultados - AQUÍ ESTÁ LA MAGIA */
+.tabla-resultados {
+  width: 100%;
+  border-collapse: collapse;
   margin-top: 10px;
+  font-size: 14px;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.resultados-list ul {
-  padding-left: 20px;
+.tabla-resultados thead {
+  background-color: #37474f;
+  color: white;
 }
 
-h3,
-h4,
-h5 {
-  color: #444;
+.tabla-resultados th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tabla-resultados th:last-child {
+  text-align: right;
+}
+
+.tabla-resultados tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s;
+}
+
+.tabla-resultados tbody tr:last-child {
+  border-bottom: none;
+}
+
+.tabla-resultados tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.tabla-resultados td {
+  padding: 12px 15px;
+  vertical-align: middle;
+  line-height: 1.4;
+}
+
+/* Alineación específica de columnas */
+.tabla-resultados td:nth-child(1) { /* Lista */
+  font-weight: 500;
+  color: #333;
+}
+
+.tabla-resultados td:nth-child(2) { /* Partido */
+  color: #555;
+}
+
+.tabla-resultados td:nth-child(3) { /* Cant. Votos */
+  text-align: center;
+  font-weight: 600;
+  color: #2196f3;
+}
+
+.tabla-resultados td:nth-child(4) { /* Porcentaje */
+  text-align: right;
+  font-weight: 600;
+  color: #4caf50;
+}
+
+/* Estilos especiales para votos especiales */
+.tabla-resultados tbody tr:has(td:first-child:contains("Anulado")) {
+  background-color: #fff3e0;
+}
+
+.tabla-resultados tbody tr:has(td:first-child:contains("En Blanco")) {
+  background-color: #f3e5f5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .manage-circuit-container {
+    padding: 10px;
+  }
+  
+  .establecimiento-card {
+    padding: 15px;
+  }
+  
+  .tabla-resultados {
+    font-size: 12px;
+  }
+  
+  .tabla-resultados th,
+  .tabla-resultados td {
+    padding: 8px 10px;
+  }
 }

@@ -7,6 +7,40 @@ const ManageCircuit = () => {
   const [resultados, setResultados] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [circuitosVisibles, setCircuitosVisibles] = useState({});
+  const [resultadosVisibles, setResultadosVisibles] = useState({});
+
+
+  const toggleResultados = async (idCircuito) => {
+    // Si ya están visibles, los ocultamos
+    if (resultadosVisibles[idCircuito]) {
+      setResultadosVisibles((prev) => ({ ...prev, [idCircuito]: false }));
+      return;
+    }
+
+    // Si ya se cargaron antes, solo los mostramos
+    if (resultados[idCircuito]) {
+      setResultadosVisibles((prev) => ({ ...prev, [idCircuito]: true }));
+      return;
+    }
+
+    // Sino, los cargamos y mostramos
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/circuitos/resultados/${idCircuito}`
+      );
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const data = await res.json();
+      setResultados((prev) => ({ ...prev, [idCircuito]: data }));
+      setResultadosVisibles((prev) => ({ ...prev, [idCircuito]: true }));
+    } catch (err) {
+      setError(`Error al obtener resultados: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchEstablecimientos = async () => {
     setLoading(true);
@@ -23,6 +57,37 @@ const ManageCircuit = () => {
     }
   };
 
+  const toggleCircuitos = async (idEst) => {
+    // Si ya están visibles, los ocultamos
+    if (circuitosVisibles[idEst]) {
+      setCircuitosVisibles((prev) => ({ ...prev, [idEst]: false }));
+      return;
+    }
+
+    // Si ya se cargaron antes, solo cambiamos visibilidad
+    if (circuitos[idEst]) {
+      setCircuitosVisibles((prev) => ({ ...prev, [idEst]: true }));
+      return;
+    }
+
+    // Sino, los cargamos y mostramos
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/circuitos/establecimiento/${idEst}`
+      );
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const data = await res.json();
+      setCircuitos((prev) => ({ ...prev, [idEst]: data }));
+      setCircuitosVisibles((prev) => ({ ...prev, [idEst]: true }));
+    } catch (err) {
+      setError(`Error al obtener circuitos: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   const fetchCircuitos = async (idEst) => {
     setLoading(true);
     setError("");
@@ -79,56 +144,139 @@ const ManageCircuit = () => {
                 <small>
                   {est.calle} {est.nro_puerta} - CP: {est.cod_postal}
                   <br />
-                  Circuito #{est.id_establecimiento}
+                  EST#{est.id_establecimiento}
                 </small>
               </div>
 
               <button
-                onClick={() => fetchCircuitos(est.id_establecimiento)}
+                onClick={() => toggleCircuitos(est.id_establecimiento)}
                 className="view-circuitos-button"
               >
-                Ver Circuitos
+                {circuitosVisibles[est.id_establecimiento]
+                  ? "Ocultar Circuitos"
+                  : "Ver Circuitos"}
               </button>
 
-              {circuitos[est.id_establecimiento] && (
-                <div className="circuito-list">
-                  <h4>
-                    Circuitos ({circuitos[est.id_establecimiento].length})
-                  </h4>
-                  {circuitos[est.id_establecimiento].map((c) => (
-                    <div key={c.id} className="circuito-card">
-                      <p>
-                        <strong>Circuito #{c.id}</strong>
-                        <br />
-                        Serie: {c.principio_serie} - {c.final_serie}
-                        <br />
-                        Accesible: {c.accesible ? "Sí" : "No"}
-                      </p>
+              {circuitosVisibles[est.id_establecimiento] &&
+                circuitos[est.id_establecimiento] && (
+                  <div className="circuito-list">
+                    <h4>
+                      Circuitos ({circuitos[est.id_establecimiento].length})
+                    </h4>
+                    {circuitos[est.id_establecimiento].map((c) => (
+                      <div key={c.id} className="circuito-card">
+                        <p>
+                          <strong>Circuito #{c.id}</strong>
+                          <br />
+                          Serie: {c.principio_serie} - {c.final_serie}
+                          <br />
+                          Accesible: {c.accesible ? "Sí" : "No"}
+                        </p>
 
-                      <button
-                        onClick={() => fetchResultados(c.id)}
-                        className="ver-resultados-button"
-                      >
-                        Ver Resultados
-                      </button>
+                        <button
+                          onClick={() => toggleResultados(c.id)}
+                          className="ver-resultados-button"
+                        >
+                          {resultadosVisibles[c.id]
+                            ? "Ocultar Resultados"
+                            : "Ver Resultados"}
+                        </button>
 
-                      {resultados[c.id] && (
-                        <div className="resultados-list">
-                          <h5>Resultados:</h5>
-                          <ul>
-                            {resultados[c.id].map((r, index) => (
-                              <li key={index}>
-                                {r.partido || "Voto en blanco"} - Lista:{" "}
-                                {r.lista || "N/A"} - Votos: {r.votos}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
+                        {resultadosVisibles[c.id] && resultados[c.id] && (
+                          <div className="resultados-list">
+                            <h5>Resultados:</h5>
+                            <table className="tabla-resultados">
+                              <thead>
+                                <tr>
+                                  <th>Lista </th>
+                                  <th>Partido</th>
+                                  <th>Cant. Votos</th>
+                                  <th>Porcentaje</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {(() => {
+                                  // Primero agrupamos los resultados usando los atributos booleanos
+                                  const resultadosAgrupados = resultados[
+                                    c.id
+                                  ].reduce((acc, r) => {
+                                    let lista, partido;
+
+                                    // Usamos los atributos booleanos para clasificar
+                                    if (r.es_valido === 0) {
+                                      // Voto anulado (es_valido = 0)
+                                      lista = "Anulado";
+                                      partido = "Anulado";
+                                    } else if (r.en_blanco === 1) {
+                                      // Voto en blanco (en_blanco = 1)
+                                      lista = "En Blanco";
+                                      partido = "En Blanco";
+                                    } else if (
+                                      r.es_valido !== 0 &&
+                                      r.en_blanco !== 1
+                                    ) {
+                                      // Voto válido normal (es_valido != 0 AND en_blanco != 1)
+                                      lista = r.lista || "Sin Lista";
+                                      partido = r.partido || "Sin Partido";
+                                    } else {
+                                      // Caso fallback (por si acaso)
+                                      lista = "Otros";
+                                      partido = "Otros";
+                                    }
+
+                                    // Usamos una clave única para agrupar
+                                    const clave = `${lista}-${partido}`;
+
+                                    if (acc[clave]) {
+                                      // Si ya existe, sumamos los votos
+                                      acc[clave].votos += r.votos;
+                                    } else {
+                                      // Si no existe, lo creamos
+                                      acc[clave] = {
+                                        lista: lista,
+                                        partido: partido,
+                                        votos: r.votos,
+                                      };
+                                    }
+
+                                    return acc;
+                                  }, {});
+
+                                  // Convertimos el objeto a array
+                                  const resultadosArray =
+                                    Object.values(resultadosAgrupados);
+
+                                  // Calculamos el total de votos
+                                  const totalVotos = resultadosArray.reduce(
+                                    (sum, r) => sum + r.votos,
+                                    0
+                                  );
+
+                                  return resultadosArray.map((r, index) => {
+                                    const porcentaje = totalVotos
+                                      ? ((r.votos / totalVotos) * 100).toFixed(
+                                          1
+                                        ) + "%"
+                                      : "0%";
+
+                                    return (
+                                      <tr key={index}>
+                                        <td>{r.lista}</td>
+                                        <td>{r.partido}</td>
+                                        <td>{r.votos}</td>
+                                        <td>{porcentaje}</td>
+                                      </tr>
+                                    );
+                                  });
+                                })()}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
             </div>
           ))}
         </div>
