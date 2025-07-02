@@ -256,3 +256,344 @@
     padding: 8px 10px;
   }
 }
+/* Contenedor de botones */
+.button-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* Botón de resultados globales */
+.global-results-button {
+  background-color: #28a745 !important;
+  transition: all 0.3s ease;
+}
+
+.global-results-button:hover {
+  background-color: #218838 !important;
+  transform: translateY(-1px);
+}
+
+.global-results-button.active {
+  background-color: #dc3545 !important;
+}
+
+.global-results-button.active:hover {
+  background-color: #c82333 !important;
+}
+
+/* ========================================
+   SECCIÓN DE RESULTADOS GLOBALES
+   ======================================== */
+
+.resultados-globales-section {
+  background-color: #f8f9fa;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+.resultados-globales-title {
+  color: #007bff;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   TABLA DE RESULTADOS GLOBALES
+   ======================================== */
+
+.tabla-globales {
+  width: 100%;
+  margin-top: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.header-globales {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+  color: white !important;
+}
+
+.header-globales th {
+  padding: 15px 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 13px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Alineación de columnas en header */
+.col-posicion {
+  text-align: left !important;
+  width: 10%;
+}
+
+.col-partido {
+  text-align: left !important;
+  width: 25%;
+}
+
+.col-votos-validos,
+.col-votos-blanco,
+.col-total,
+.col-porcentaje {
+  text-align: center !important;
+  width: 16%;
+}
+
+/* ========================================
+   FILAS DE LA TABLA GLOBALES
+   ======================================== */
+
+.fila-partido {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.fila-partido:hover {
+  background-color: #e3f2fd !important;
+  transform: translateX(2px);
+}
+
+.fila-partido.ganador {
+  background-color: #d4edda !important;
+  font-weight: bold;
+  border-left: 4px solid #28a745;
+}
+
+.fila-partido.ganador:hover {
+  background-color: #c3e6cb !important;
+}
+
+.fila-partido.par {
+  background-color: #f8f9fa;
+}
+
+.fila-partido.impar {
+  background-color: white;
+}
+
+/* Columnas específicas de la tabla globales */
+.fila-partido .col-posicion {
+  text-align: left;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.fila-partido .col-partido {
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+}
+
+.fila-partido .col-votos-validos {
+  text-align: center;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.fila-partido .col-votos-blanco {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.fila-partido .col-total {
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  color: #28a745;
+}
+
+.fila-partido .col-porcentaje {
+  text-align: center;
+  font-weight: bold;
+  color: #28a745;
+  font-size: 15px;
+}
+
+/* ========================================
+   ELEMENTOS ADICIONALES
+   ======================================== */
+
+.nota-explicativa {
+  margin-top: 15px;
+  padding: 12px 15px;
+  background-color: #e7f3ff;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #0056b3;
+  border-left: 4px solid #007bff;
+  line-height: 1.5;
+}
+
+.no-resultados {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  padding: 20px;
+  margin: 0;
+}
+
+/* ========================================
+   CONTROLES DE VISTA (SIN INLINE STYLES)
+   ======================================== */
+
+.vista-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.vista-controls h5 {
+  margin: 0;
+}
+
+.toggle-view-button {
+  padding: 8px 15px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.toggle-view-button.lista {
+  background-color: #007bff;
+}
+
+.toggle-view-button.lista:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.toggle-view-button.partido {
+  background-color: #28a745;
+}
+
+.toggle-view-button.partido:hover {
+  background-color: #1e7e34;
+  transform: translateY(-1px);
+}
+
+.toggle-view-button.candidato {
+  background-color: #dc3545;
+}
+
+.toggle-view-button.candidato:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+/* ========================================
+   RESPONSIVE PARA RESULTADOS GLOBALES
+   ======================================== */
+
+@media (max-width: 992px) {
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .global-results-button {
+    margin-top: 10px;
+  }
+
+  .resultados-globales-title {
+    font-size: 20px;
+  }
+
+  .tabla-globales {
+    font-size: 13px;
+  }
+
+  .header-globales th {
+    padding: 10px 8px;
+    font-size: 11px;
+  }
+
+  .fila-partido td {
+    padding: 8px 6px;
+  }
+}
+
+@media (max-width: 768px) {
+  .resultados-globales-section {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  .resultados-globales-title {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  .tabla-globales {
+    font-size: 12px;
+  }
+
+  .header-globales th {
+    padding: 8px 6px;
+    font-size: 10px;
+  }
+
+  .fila-partido td {
+    padding: 6px 4px;
+  }
+
+  .fila-partido .col-total {
+    font-size: 14px;
+  }
+
+  .fila-partido .col-porcentaje {
+    font-size: 13px;
+  }
+
+  .nota-explicativa {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .vista-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .toggle-view-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Para pantallas muy pequeñas, ocultar algunas columnas menos importantes */
+  .col-votos-validos,
+  .col-votos-blanco {
+    display: none;
+  }
+
+  .col-partido,
+  .col-total,
+  .col-porcentaje {
+    width: auto;
+  }
+
+  .resultados-globales-title {
+    font-size: 16px;
+  }
+}

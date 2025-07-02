@@ -5,23 +5,35 @@ const ManageCircuit = () => {
   const [establecimientos, setEstablecimientos] = useState([]);
   const [circuitos, setCircuitos] = useState({});
   const [resultados, setResultados] = useState({});
+  const [resultadosGlobales, setResultadosGlobales] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [circuitosVisibles, setCircuitosVisibles] = useState({});
   const [resultadosVisibles, setResultadosVisibles] = useState({});
-  // Nuevo estado para controlar el tipo de vista: 'lista', 'partido', 'candidato'
+  const [resultadosGlobalesVisibles, setResultadosGlobalesVisibles] =
+    useState(false);
+  const [establecimientosVisibles, setEstablecimientosVisibles] =
+    useState(false);
   const [tipoVista, setTipoVista] = useState({});
 
-  const toggleResultados = async (idCircuito) => {
+  // Función para crear clave compuesta del circuito
+  const crearClaveCircuito = (idCircuito, idEstablecimiento) => {
+    return `${idCircuito}_${idEstablecimiento}`;
+  };
+
+  const toggleResultados = async (idCircuito, idEstablecimiento) => {
+    const claveCircuito = crearClaveCircuito(idCircuito, idEstablecimiento);
+    console.log(claveCircuito);
+
     // Si ya están visibles, los ocultamos
-    if (resultadosVisibles[idCircuito]) {
-      setResultadosVisibles((prev) => ({ ...prev, [idCircuito]: false }));
+    if (resultadosVisibles[claveCircuito]) {
+      setResultadosVisibles((prev) => ({ ...prev, [claveCircuito]: false }));
       return;
     }
 
     // Si ya se cargaron antes, solo los mostramos
-    if (resultados[idCircuito]) {
-      setResultadosVisibles((prev) => ({ ...prev, [idCircuito]: true }));
+    if (resultados[claveCircuito]) {
+      setResultadosVisibles((prev) => ({ ...prev, [claveCircuito]: true }));
       return;
     }
 
@@ -30,12 +42,12 @@ const ManageCircuit = () => {
     setError("");
     try {
       const res = await fetch(
-        `http://localhost:3000/api/circuitos/resultados/${idCircuito}`
+        `http://localhost:3000/api/circuitos/resultados/${idCircuito}/${idEstablecimiento}`
       );
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
-      setResultados((prev) => ({ ...prev, [idCircuito]: data }));
-      setResultadosVisibles((prev) => ({ ...prev, [idCircuito]: true }));
+      setResultados((prev) => ({ ...prev, [claveCircuito]: data }));
+      setResultadosVisibles((prev) => ({ ...prev, [claveCircuito]: true }));
     } catch (err) {
       setError(`Error al obtener resultados: ${err.message}`);
     } finally {
@@ -43,7 +55,17 @@ const ManageCircuit = () => {
     }
   };
 
-  const fetchEstablecimientos = async () => {
+  const toggleEstablecimientos = async () => {
+    if (establecimientosVisibles) {
+      setEstablecimientosVisibles(false);
+      return;
+    }
+
+    if (establecimientos.length > 0) {
+      setEstablecimientosVisibles(true);
+      return;
+    }
+
     setLoading(true);
     setError("");
     try {
@@ -51,6 +73,7 @@ const ManageCircuit = () => {
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
       setEstablecimientos(data);
+      setEstablecimientosVisibles(true);
     } catch (err) {
       setError(`Error al obtener establecimientos: ${err.message}`);
     } finally {
@@ -59,19 +82,16 @@ const ManageCircuit = () => {
   };
 
   const toggleCircuitos = async (idEst) => {
-    // Si ya están visibles, los ocultamos
     if (circuitosVisibles[idEst]) {
       setCircuitosVisibles((prev) => ({ ...prev, [idEst]: false }));
       return;
     }
 
-    // Si ya se cargaron antes, solo cambiamos visibilidad
     if (circuitos[idEst]) {
       setCircuitosVisibles((prev) => ({ ...prev, [idEst]: true }));
       return;
     }
 
-    // Sino, los cargamos y mostramos
     setLoading(true);
     setError("");
     try {
@@ -89,44 +109,38 @@ const ManageCircuit = () => {
     }
   };
 
-  const fetchCircuitos = async (idEst) => {
+  const toggleResultadosGlobales = async () => {
+    if (resultadosGlobalesVisibles) {
+      setResultadosGlobalesVisibles(false);
+      return;
+    }
+
+    if (resultadosGlobales.length > 0) {
+      setResultadosGlobalesVisibles(true);
+      return;
+    }
+
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(
-        `http://localhost:3000/api/circuitos/establecimiento/${idEst}`
-      );
+      const res = await fetch("http://localhost:3000/api/circuitos/globales");
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
-      setCircuitos((prev) => ({ ...prev, [idEst]: data }));
+      setResultadosGlobales(data);
+      setResultadosGlobalesVisibles(true);
     } catch (err) {
-      setError(`Error al obtener circuitos: ${err.message}`);
+      setError(`Error al obtener resultados globales: ${err.message}`);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchResultados = async (idCircuito) => {
-    setLoading(true);
-    setError("");
-    try {
-      const res = await fetch(
-        `http://localhost:3000/api/circuitos/resultados/${idCircuito}`
-      );
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-      const data = await res.json();
-      setResultados((prev) => ({ ...prev, [idCircuito]: data }));
-    } catch (err) {
-      setError(`Error al obtener resultados: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Función para cambiar el tipo de vista usando la clave compuesta
+  const cambiarTipoVista = (idCircuito, idEstablecimiento) => {
+    const claveCircuito = crearClaveCircuito(idCircuito, idEstablecimiento);
 
-  // Función para cambiar el tipo de vista
-  const cambiarTipoVista = (idCircuito) => {
     setTipoVista((prev) => {
-      const actual = prev[idCircuito] || "lista";
+      const actual = prev[claveCircuito] || "lista";
       let siguiente;
 
       if (actual === "lista") {
@@ -137,7 +151,7 @@ const ManageCircuit = () => {
         siguiente = "lista";
       }
 
-      return { ...prev, [idCircuito]: siguiente };
+      return { ...prev, [claveCircuito]: siguiente };
     });
   };
 
@@ -145,6 +159,7 @@ const ManageCircuit = () => {
   const procesarResultados = (resultadosCircuito, tipoVista = "lista") => {
     return resultadosCircuito.reduce((acc, r) => {
       let lista, partido, candidato, clave;
+
       // Clasificamos el voto
       if (r.es_valido === 0) {
         lista = "Anulado";
@@ -160,7 +175,6 @@ const ManageCircuit = () => {
         lista = r.lista || "Sin Lista";
         partido = r.partido || "Sin Partido";
 
-        // Concatenamos nombre y apellido del candidato
         const nombreCompleto =
           r.candidato && r.candidato_apellido
             ? `${r.candidato} ${r.candidato_apellido}`
@@ -207,11 +221,117 @@ const ManageCircuit = () => {
       {loading && <div className="loading-message">Cargando...</div>}
       {error && <div className="error-message">{error}</div>}
 
-      <button onClick={fetchEstablecimientos} className="load-button">
-        Establecimientos
-      </button>
+      <div className="button-container">
+        <button
+          onClick={toggleEstablecimientos}
+          className={`load-button ${establecimientosVisibles ? "active" : ""}`}
+        >
+          {establecimientosVisibles
+            ? "Ocultar Establecimientos"
+            : "Establecimientos"}
+        </button>
 
-      {establecimientos.length > 0 && (
+        <button
+          onClick={toggleResultadosGlobales}
+          className={`load-button global-results-button ${
+            resultadosGlobalesVisibles ? "active" : ""
+          }`}
+        >
+          {resultadosGlobalesVisibles
+            ? "Ocultar Resultados Globales"
+            : "🌍 Ver Resultados Globales"}
+        </button>
+      </div>
+
+      {/* Sección de Resultados Globales */}
+      {resultadosGlobalesVisibles && (
+        <div className="resultados-globales-section">
+          <h3 className="resultados-globales-title">
+            🏆 Resultados Globales por Partido
+          </h3>
+
+          {resultadosGlobales.length > 0 ? (
+            <div>
+              <table className="tabla-resultados tabla-globales">
+                <thead>
+                  <tr className="header-globales">
+                    <th className="col-posicion">Posición</th>
+                    <th className="col-partido">Partido</th>
+                    <th className="col-votos-validos">Votos Válidos</th>
+                    <th className="col-votos-blanco">Votos en Blanco</th>
+                    <th className="col-total">Total de Votos</th>
+                    <th className="col-porcentaje">Porcentaje</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(() => {
+                    const totalVotosGlobal = resultadosGlobales.reduce(
+                      (sum, partido) => sum + partido.votos_totales,
+                      0
+                    );
+
+                    return resultadosGlobales.map((partido, index) => {
+                      const porcentaje = totalVotosGlobal
+                        ? (
+                            (partido.votos_totales / totalVotosGlobal) *
+                            100
+                          ).toFixed(1) + "%"
+                        : "0%";
+
+                      return (
+                        <tr
+                          key={partido.id_partido}
+                          className={`fila-partido ${
+                            partido.es_ganador ? "ganador" : ""
+                          } ${index % 2 === 0 ? "par" : "impar"}`}
+                        >
+                          <td className="col-posicion">
+                            {index === 0
+                              ? "🥇"
+                              : index === 1
+                              ? "🥈"
+                              : index === 2
+                              ? "🥉"
+                              : `${index + 1}°`}
+                          </td>
+                          <td className="col-partido">
+                            {partido.partido}
+                            {partido.es_ganador && " 👑"}
+                          </td>
+                          <td className="col-votos-validos">
+                            {partido.votos_validos.toLocaleString()}
+                          </td>
+                          <td className="col-votos-blanco">
+                            {partido.votos_en_blanco > 0
+                              ? `+${partido.votos_en_blanco.toLocaleString()}`
+                              : "0"}
+                          </td>
+                          <td className="col-total">
+                            {partido.votos_totales.toLocaleString()}
+                          </td>
+                          <td className="col-porcentaje">{porcentaje}</td>
+                        </tr>
+                      );
+                    });
+                  })()}
+                </tbody>
+              </table>
+
+              <div className="nota-explicativa">
+                ℹ️ <strong>Nota:</strong> Los votos en blanco se suman
+                únicamente al partido ganador (mayor cantidad de votos válidos).
+              </div>
+            </div>
+          ) : (
+            <p className="no-resultados">
+              No hay resultados globales disponibles.
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Sección de Establecimientos */}
+      {establecimientosVisibles && establecimientos.length > 0 && (
         <div>
           <h3>Establecimientos encontrados: {establecimientos.length}</h3>
           {establecimientos.map((est) => (
@@ -241,125 +361,118 @@ const ManageCircuit = () => {
                     <h4>
                       Circuitos ({circuitos[est.id_establecimiento].length})
                     </h4>
-                    {circuitos[est.id_establecimiento].map((c) => (
-                      <div key={c.id} className="circuito-card">
-                        <p>
-                          <strong>Circuito #{c.id}</strong>
-                          <br />
-                          Serie: {c.principio_serie} - {c.final_serie}
-                          <br />
-                          Accesible: {c.accesible ? "Sí" : "No"}
-                        </p>
+                    {circuitos[est.id_establecimiento].map((c) => {
+                      const claveCircuito = crearClaveCircuito(
+                        c.id,
+                        c.id_establecimiento
+                      );
 
-                        <button
-                          onClick={() => toggleResultados(c.id)}
-                          className="ver-resultados-button"
-                        >
-                          {resultadosVisibles[c.id]
-                            ? "Ocultar Resultados"
-                            : "Ver Resultados"}
-                        </button>
+                      return (
+                        <div key={claveCircuito} className="circuito-card">
+                          <p>
+                            <strong>Circuito #{c.id}</strong> - EST#
+                            {c.id_establecimiento}
+                            <br />
+                            Serie: {c.principio_serie} - {c.final_serie}
+                            <br />
+                            Accesible: {c.accesible ? "Sí" : "No"}
+                          </p>
 
-                        {resultadosVisibles[c.id] && resultados[c.id] && (
-                          <div className="resultados-list">
-                            <div
-                              style={{
-                                display: "flex",
-                                gap: "10px",
-                                marginBottom: "15px",
-                                alignItems: "center",
-                                borderBottom: "1px solid #ddd",
-                                paddingBottom: "10px",
-                              }}
-                            >
-                              <h5 style={{ margin: 0 }}>Resultados:</h5>
-                              <button
-                                onClick={() => cambiarTipoVista(c.id)}
-                                className="toggle-view-button"
-                                style={{
-                                  padding: "8px 15px",
-                                  backgroundColor:
-                                    (tipoVista[c.id] || "lista") === "lista"
-                                      ? "#007bff"
-                                      : (tipoVista[c.id] || "lista") ===
-                                        "partido"
-                                      ? "#28a745"
-                                      : "#dc3545",
-                                  color: "white",
-                                  border: "none",
-                                  borderRadius: "5px",
-                                  cursor: "pointer",
-                                  fontSize: "14px",
-                                  fontWeight: "bold",
-                                }}
-                              >
-                                {(tipoVista[c.id] || "lista") === "lista" &&
-                                  "📊 Ver por Partido"}
-                                {(tipoVista[c.id] || "lista") === "partido" &&
-                                  "👤 Ver por Candidato"}
-                                {(tipoVista[c.id] || "lista") === "candidato" &&
-                                  "📝 Ver por Lista"}
-                              </button>
-                            </div>
+                          <button
+                            onClick={() =>
+                              toggleResultados(c.id, c.id_establecimiento)
+                            }
+                            className="ver-resultados-button"
+                          >
+                            {resultadosVisibles[claveCircuito]
+                              ? "Ocultar Resultados"
+                              : "Ver Resultados"}
+                          </button>
 
-                            <table className="tabla-resultados">
-                              <thead>
-                                <tr>
-                                  {(tipoVista[c.id] || "lista") === "lista" && (
-                                    <th>Lista</th>
-                                  )}
-                                  <th>Partido</th>
-                                  {(tipoVista[c.id] || "lista") ===
-                                    "candidato" && <th>Candidato</th>}
-                                  <th>Cant. Votos</th>
-                                  <th>Porcentaje</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {(() => {
-                                  const vistaActual =
-                                    tipoVista[c.id] || "lista";
-                                  const resultadosAgrupados =
-                                    procesarResultados(
-                                      resultados[c.id],
-                                      vistaActual
-                                    );
+                          {resultadosVisibles[claveCircuito] &&
+                            resultados[claveCircuito] && (
+                              <div className="resultados-list">
+                                <div className="vista-controls">
+                                  <h5>Resultados:</h5>
+                                  <button
+                                    onClick={() =>
+                                      cambiarTipoVista(
+                                        c.id,
+                                        c.id_establecimiento
+                                      )
+                                    }
+                                    className={`toggle-view-button ${
+                                      tipoVista[claveCircuito] || "lista"
+                                    }`}
+                                  >
+                                    {(tipoVista[claveCircuito] || "lista") ===
+                                      "lista" && "📊 Ver por Partido"}
+                                    {(tipoVista[claveCircuito] || "lista") ===
+                                      "partido" && "👤 Ver por Candidato"}
+                                    {(tipoVista[claveCircuito] || "lista") ===
+                                      "candidato" && "📝 Ver por Lista"}
+                                  </button>
+                                </div>
 
-                                  const resultadosArray =
-                                    Object.values(resultadosAgrupados);
-                                  const totalVotos = resultadosArray.reduce(
-                                    (sum, r) => sum + r.votos,
-                                    0
-                                  );
+                                <table className="tabla-resultados">
+                                  <thead>
+                                    <tr>
+                                      {(tipoVista[claveCircuito] || "lista") ===
+                                        "lista" && <th>Lista</th>}
+                                      <th>Partido</th>
+                                      {(tipoVista[claveCircuito] || "lista") ===
+                                        "candidato" && <th>Candidato</th>}
+                                      <th>Cant. Votos</th>
+                                      <th>Porcentaje</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {(() => {
+                                      const vistaActual =
+                                        tipoVista[claveCircuito] || "lista";
+                                      const resultadosAgrupados =
+                                        procesarResultados(
+                                          resultados[claveCircuito],
+                                          vistaActual
+                                        );
 
-                                  return resultadosArray.map((r, index) => {
-                                    const porcentaje = totalVotos
-                                      ? ((r.votos / totalVotos) * 100).toFixed(
-                                          1
-                                        ) + "%"
-                                      : "0%";
+                                      const resultadosArray =
+                                        Object.values(resultadosAgrupados);
+                                      const totalVotos = resultadosArray.reduce(
+                                        (sum, r) => sum + r.votos,
+                                        0
+                                      );
 
-                                    return (
-                                      <tr key={index}>
-                                        {vistaActual === "lista" && (
-                                          <td>{r.lista}</td>
-                                        )}
-                                        <td>{r.partido}</td>
-                                        {vistaActual === "candidato" && (
-                                          <td>{r.candidato}</td>
-                                        )}
-                                        <td>{r.votos}</td>
-                                        <td>{porcentaje}</td>
-                                      </tr>
-                                    );
-                                  });
-                                })()}
-                              </tbody>
-                            </table>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                                      return resultadosArray.map((r, index) => {
+                                        const porcentaje = totalVotos
+                                          ? (
+                                              (r.votos / totalVotos) *
+                                              100
+                                            ).toFixed(1) + "%"
+                                          : "0%";
+
+                                        return (
+                                          <tr key={index}>
+                                            {vistaActual === "lista" && (
+                                              <td>{r.lista}</td>
+                                            )}
+                                            <td>{r.partido}</td>
+                                            {vistaActual === "candidato" && (
+                                              <td>{r.candidato}</td>
+                                            )}
+                                            <td>{r.votos}</td>
+                                            <td>{porcentaje}</td>
+                                          </tr>
+                                        );
+                                      });
+                                    })()}
+                                  </tbody>
+                                </table>
+                              </div>
+                            )}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
             </div>
