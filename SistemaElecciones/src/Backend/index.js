@@ -7,6 +7,9 @@ import voteRoutes from "./Routes/voteRoutes.js";
 import eleccionRoutes from "./Routes/eleccionRoutes.js";
 import partidoRoutes from "./Routes/partidoRoutes.js";
 import listaRoutes from "./Routes/listaRoutes.js";
+import establecimientoRoutes from "./Routes/establecimientoRoutes.js";
+import circuitRoutes from "./Routes/circuitRoutes.js";
+
 
 const app = express();
 const PORT = 3000;
@@ -21,6 +24,8 @@ app.use("/api/vote", voteRoutes);
 app.use("/api", eleccionRoutes);
 app.use("/api", partidoRoutes);
 app.use("/api", listaRoutes);
+app.use("/api", establecimientoRoutes);
+app.use('/api/circuitos', circuitRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor backend corriendo en http://localhost:${PORT}`);

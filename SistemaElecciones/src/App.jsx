@@ -9,6 +9,7 @@ import "./Styles/globalConfig.css";
 import RegisterVoter from './Views/registerVoter';
 import Vote from "./Views/vote";
 import CreateElection from "./Views/createElecction";
+import ManageCircuit from './Views/manageCircuit';
 import VoteObserved from "./Views/voteObserved";
 import CreatePartido from "./Views/createPartido";
 import CreateLista from './Views/createLista';
@@ -66,6 +67,11 @@ function App() {
                 <CreateLista />
               </ProtectedRoute>
             } />
+            <Route path="admin/circuitos" element={
+              <ProtectedRoute role="admin">
+                <ManageCircuit />
+              </ProtectedRoute>
+            }/>
             <Route path="/unauthorized" element={<p>No autorizado</p>} />
           </Routes>
         </LayoutWithNavbar>
