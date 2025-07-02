@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "../Styles/registerVoter.css"
 
 const RegisterVoter = () => {
   const [formData, setFormData] = useState({

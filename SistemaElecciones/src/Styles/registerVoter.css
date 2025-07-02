@@ -1,5 +1,5 @@
 .register-container {
-  margin-left: 220px; /* si usás sidebar */
+  margin-left: 220px;
   padding: 40px;
   background-color: var(--gris-claro);
   min-height: 100vh;
@@ -23,6 +23,7 @@
   text-align: center;
   color: var(--gris-oscuro);
   margin-bottom: 10px;
+  font-family: var(--fuente-principal);
 }
 
 .register-form input {

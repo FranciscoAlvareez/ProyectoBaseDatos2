@@ -22,7 +22,6 @@ const Navbar = () => {
         {(rol === "ciudadano" || rol === "gestor") && (
           <>
             <li><Link to="/votar">Votar</Link></li>
-            <li><Link to="/verResultados">Ver Resultados</Link></li>
           </>
         )}
 
@@ -30,19 +29,20 @@ const Navbar = () => {
         {rol === "gestor" && (
           <>
             <li><Link to="/votoObservado">Registrar Voto Observado</Link></li>
-            <li><Link to="/gestionarMesas">Gestionar Mesas</Link></li>
-            <li><Link to="/reconteo">Reconteo Rápido</Link></li>
           </>
         )}
 
         {/* Links exclusivos admin */}
         {rol === "admin" && (
           <>
-            <li><Link to="/admin/dashboard">Dashboard Admin</Link></li>
-            <li><Link to="/admin/usuarios">Gestionar Usuarios</Link></li>
+            <li><Link to="/admin/createElection">Crear Elección</Link></li>
+            <li><Link to="/admin/createPartido">Crear Partido</Link></li>
+            <li><Link to="/admin/createLista">Crear Lista</Link></li>
             <li><Link to="/admin/circuitos">Gestionar Circuitos</Link></li>
+            <li><Link to="/admin/registerVoter">Registrar Ciudadano</Link></li>
           </>
         )}
+
 
         <li>
           <button onClick={logout} style={{ background: "none", border: "none", color: "white", cursor: "pointer" }}>
