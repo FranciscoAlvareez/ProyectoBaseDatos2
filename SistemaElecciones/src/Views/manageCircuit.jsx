@@ -161,7 +161,7 @@ const ManageCircuit = () => {
       let lista, partido, candidato, clave;
 
       // Clasificamos el voto
-      if (r.es_valido === 0) {
+      if (r.anulado === 1) {
         lista = "Anulado";
         partido = "Anulado";
         candidato = "Anulado";
@@ -171,7 +171,7 @@ const ManageCircuit = () => {
         partido = "En Blanco";
         candidato = "En Blanco";
         clave = "En Blanco";
-      } else if (r.es_valido !== 0 && r.en_blanco !== 1) {
+      } else if (r.anulado !== 1 && r.en_blanco !== 1) {
         lista = r.lista || "Sin Lista";
         partido = r.partido || "Sin Partido";
 

@@ -29,7 +29,7 @@ export const getResultadosByCircuito = async (req, res) => {
         C.apellido_paterno AS candidato_apellido,
         L.credencial_candidato,
         V.en_blanco,
-        V.es_valido,
+        V.anulado,
         COUNT(*) AS votos
       FROM VOTO V
       LEFT JOIN LISTA L ON V.nro_lista = L.numero
@@ -37,10 +37,10 @@ export const getResultadosByCircuito = async (req, res) => {
       LEFT JOIN CANDIDATO CAND ON L.credencial_candidato = CAND.credencial_candidato
       LEFT JOIN CIUDADANO C ON CAND.credencial_candidato = C.credencial
       WHERE V.id_circuito = ? AND V.id_establecimiento = ?
-      GROUP BY P.id, P.nombre, L.numero, L.nombre, C.nombre, L.credencial_candidato, V.en_blanco, V.es_valido
+      GROUP BY P.id, P.nombre, L.numero, L.nombre, C.nombre, L.credencial_candidato, V.en_blanco, V.anulado
       ORDER BY 
           CASE 
-              WHEN V.es_valido = 0 THEN 3
+              WHEN V.anulado = 1 THEN 3
               WHEN V.en_blanco = 1 THEN 2
               ELSE 1
           END,
@@ -63,17 +63,17 @@ export const getResultadosGlobales = async (req, res) => {
         SELECT 
             P.nombre AS partido,
             P.id AS id_partido,
-            SUM(CASE WHEN V.es_valido = 1 AND V.en_blanco = 0 THEN 1 ELSE 0 END) AS votos_validos
+            SUM(CASE WHEN V.anulado = 0 AND V.en_blanco = 0 THEN 1 ELSE 0 END) AS votos_validos
         FROM VOTO V
         LEFT JOIN LISTA L ON V.nro_lista = L.numero
         LEFT JOIN PARTIDO P ON L.id_partido = P.id
-        WHERE V.es_valido = 1 AND V.en_blanco = 0 AND P.nombre IS NOT NULL
+        WHERE V.anulado = 0 AND V.en_blanco = 0 AND P.nombre IS NOT NULL
         GROUP BY P.id, P.nombre
     ),
     votos_en_blanco_total AS (
         SELECT COUNT(*) AS total_votos_blanco
         FROM VOTO
-        WHERE es_valido = 1 AND en_blanco = 1
+        WHERE anulado = 0 AND en_blanco = 1
     ),
     partido_ganador AS (
         SELECT id_partido
