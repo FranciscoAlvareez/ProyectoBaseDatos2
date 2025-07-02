@@ -35,6 +35,7 @@ const Login = () => {
       navigate("/home");
     } catch (err) {
       setError("Credenciales incorrectas o usuario no encontrado");
+      console.log(err);
     }
   };
 

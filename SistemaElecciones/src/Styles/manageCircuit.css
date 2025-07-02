@@ -1,0 +1,599 @@
+.manage-circuit-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.manage-circuit-container h2 {
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.loading-message {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin: 15px 0;
+  text-align: center;
+  border-left: 4px solid #1976d2;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin: 15px 0;
+  text-align: center;
+  border-left: 4px solid #c62828;
+}
+
+.load-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  display: block;
+  margin: 0 auto 30px;
+}
+
+.load-button:hover {
+  background-color: #1976d2;
+}
+
+/* Establecimiento Cards */
+.establecimiento-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: box-shadow 0.2s;
+}
+
+.establecimiento-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.establecimiento-info {
+  margin-bottom: 15px;
+}
+
+.establecimiento-info strong {
+  font-size: 18px;
+  color: #333;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.establecimiento-info small {
+  color: #666;
+  line-height: 1.4;
+}
+
+.view-circuitos-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.view-circuitos-button:hover {
+  background-color: #388e3c;
+}
+
+/* Circuito List */
+.circuito-list {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.circuito-list h4 {
+  color: #333;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+/* Circuito Cards */
+.circuito-card {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.circuito-card p {
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.circuito-card strong {
+  color: #333;
+  font-size: 15px;
+}
+
+.ver-resultados-button {
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background-color 0.2s;
+}
+
+.ver-resultados-button:hover {
+  background-color: #f57c00;
+}
+
+/* Resultados */
+.resultados-list {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ccc;
+}
+
+.resultados-list h5 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Tabla de Resultados - AQUÍ ESTÁ LA MAGIA */
+.tabla-resultados {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 14px;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.tabla-resultados thead {
+  background-color: #37474f;
+  color: white;
+}
+
+.tabla-resultados th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tabla-resultados th:last-child {
+  text-align: right;
+}
+
+.tabla-resultados tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s;
+}
+
+.tabla-resultados tbody tr:last-child {
+  border-bottom: none;
+}
+
+.tabla-resultados tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.tabla-resultados td {
+  padding: 12px 15px;
+  vertical-align: middle;
+  line-height: 1.4;
+}
+
+/* Alineación específica de columnas */
+.tabla-resultados td:nth-child(1) { /* Lista */
+  font-weight: 500;
+  color: #333;
+}
+
+.tabla-resultados td:nth-child(2) { /* Partido */
+  color: #555;
+}
+
+.tabla-resultados td:nth-child(3) { /* Cant. Votos */
+  text-align: center;
+  font-weight: 600;
+  color: #2196f3;
+}
+
+.tabla-resultados td:nth-child(4) { /* Porcentaje */
+  text-align: right;
+  font-weight: 600;
+  color: #4caf50;
+}
+
+/* Estilos especiales para votos especiales */
+.tabla-resultados tbody tr:has(td:first-child:contains("Anulado")) {
+  background-color: #fff3e0;
+}
+
+.tabla-resultados tbody tr:has(td:first-child:contains("En Blanco")) {
+  background-color: #f3e5f5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .manage-circuit-container {
+    padding: 10px;
+  }
+  
+  .establecimiento-card {
+    padding: 15px;
+  }
+  
+  .tabla-resultados {
+    font-size: 12px;
+  }
+  
+  .tabla-resultados th,
+  .tabla-resultados td {
+    padding: 8px 10px;
+  }
+}
+/* Contenedor de botones */
+.button-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* Botón de resultados globales */
+.global-results-button {
+  background-color: #28a745 !important;
+  transition: all 0.3s ease;
+}
+
+.global-results-button:hover {
+  background-color: #218838 !important;
+  transform: translateY(-1px);
+}
+
+.global-results-button.active {
+  background-color: #dc3545 !important;
+}
+
+.global-results-button.active:hover {
+  background-color: #c82333 !important;
+}
+
+/* ========================================
+   SECCIÓN DE RESULTADOS GLOBALES
+   ======================================== */
+
+.resultados-globales-section {
+  background-color: #f8f9fa;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+.resultados-globales-title {
+  color: #007bff;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================
+   TABLA DE RESULTADOS GLOBALES
+   ======================================== */
+
+.tabla-globales {
+  width: 100%;
+  margin-top: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.header-globales {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+  color: white !important;
+}
+
+.header-globales th {
+  padding: 15px 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 13px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Alineación de columnas en header */
+.col-posicion {
+  text-align: left !important;
+  width: 10%;
+}
+
+.col-partido {
+  text-align: left !important;
+  width: 25%;
+}
+
+.col-votos-validos,
+.col-votos-blanco,
+.col-total,
+.col-porcentaje {
+  text-align: center !important;
+  width: 16%;
+}
+
+/* ========================================
+   FILAS DE LA TABLA GLOBALES
+   ======================================== */
+
+.fila-partido {
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.fila-partido:hover {
+  background-color: #e3f2fd !important;
+  transform: translateX(2px);
+}
+
+.fila-partido.ganador {
+  background-color: #d4edda !important;
+  font-weight: bold;
+  border-left: 4px solid #28a745;
+}
+
+.fila-partido.ganador:hover {
+  background-color: #c3e6cb !important;
+}
+
+.fila-partido.par {
+  background-color: #f8f9fa;
+}
+
+.fila-partido.impar {
+  background-color: white;
+}
+
+/* Columnas específicas de la tabla globales */
+.fila-partido .col-posicion {
+  text-align: left;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.fila-partido .col-partido {
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+}
+
+.fila-partido .col-votos-validos {
+  text-align: center;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.fila-partido .col-votos-blanco {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.fila-partido .col-total {
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  color: #28a745;
+}
+
+.fila-partido .col-porcentaje {
+  text-align: center;
+  font-weight: bold;
+  color: #28a745;
+  font-size: 15px;
+}
+
+/* ========================================
+   ELEMENTOS ADICIONALES
+   ======================================== */
+
+.nota-explicativa {
+  margin-top: 15px;
+  padding: 12px 15px;
+  background-color: #e7f3ff;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #0056b3;
+  border-left: 4px solid #007bff;
+  line-height: 1.5;
+}
+
+.no-resultados {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+  padding: 20px;
+  margin: 0;
+}
+
+/* ========================================
+   CONTROLES DE VISTA (SIN INLINE STYLES)
+   ======================================== */
+
+.vista-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.vista-controls h5 {
+  margin: 0;
+}
+
+.toggle-view-button {
+  padding: 8px 15px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.toggle-view-button.lista {
+  background-color: #007bff;
+}
+
+.toggle-view-button.lista:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.toggle-view-button.partido {
+  background-color: #28a745;
+}
+
+.toggle-view-button.partido:hover {
+  background-color: #1e7e34;
+  transform: translateY(-1px);
+}
+
+.toggle-view-button.candidato {
+  background-color: #dc3545;
+}
+
+.toggle-view-button.candidato:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+/* ========================================
+   RESPONSIVE PARA RESULTADOS GLOBALES
+   ======================================== */
+
+@media (max-width: 992px) {
+  .button-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .global-results-button {
+    margin-top: 10px;
+  }
+
+  .resultados-globales-title {
+    font-size: 20px;
+  }
+
+  .tabla-globales {
+    font-size: 13px;
+  }
+
+  .header-globales th {
+    padding: 10px 8px;
+    font-size: 11px;
+  }
+
+  .fila-partido td {
+    padding: 8px 6px;
+  }
+}
+
+@media (max-width: 768px) {
+  .resultados-globales-section {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  .resultados-globales-title {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  .tabla-globales {
+    font-size: 12px;
+  }
+
+  .header-globales th {
+    padding: 8px 6px;
+    font-size: 10px;
+  }
+
+  .fila-partido td {
+    padding: 6px 4px;
+  }
+
+  .fila-partido .col-total {
+    font-size: 14px;
+  }
+
+  .fila-partido .col-porcentaje {
+    font-size: 13px;
+  }
+
+  .nota-explicativa {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .vista-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .toggle-view-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Para pantallas muy pequeñas, ocultar algunas columnas menos importantes */
+  .col-votos-validos,
+  .col-votos-blanco {
+    display: none;
+  }
+
+  .col-partido,
+  .col-total,
+  .col-porcentaje {
+    width: auto;
+  }
+
+  .resultados-globales-title {
+    font-size: 16px;
+  }
+}
