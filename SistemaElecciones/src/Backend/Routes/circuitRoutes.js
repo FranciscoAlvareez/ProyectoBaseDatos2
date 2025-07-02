@@ -3,6 +3,7 @@ import {
   getCircuitsByEstablecimiento,
   getResultadosByCircuito,
   getResultadosGlobales,
+  getResultadosPorDepartamento,
 } from "../Controllers/circuitController.js";
 
 const router = Router();
@@ -13,5 +14,6 @@ router.get(
   getResultadosByCircuito
 );
 router.get("/globales", getResultadosGlobales);
+router.get("/departamentos", getResultadosPorDepartamento);
 
 export default router;

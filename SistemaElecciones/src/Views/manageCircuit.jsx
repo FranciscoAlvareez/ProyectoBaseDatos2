@@ -6,11 +6,14 @@ const ManageCircuit = () => {
   const [circuitos, setCircuitos] = useState({});
   const [resultados, setResultados] = useState({});
   const [resultadosGlobales, setResultadosGlobales] = useState([]);
+  const [resultadosDepartamentos, setResultadosDepartamentos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [circuitosVisibles, setCircuitosVisibles] = useState({});
   const [resultadosVisibles, setResultadosVisibles] = useState({});
   const [resultadosGlobalesVisibles, setResultadosGlobalesVisibles] =
+    useState(false);
+  const [resultadosDepartamentosVisibles, setResultadosDepartamentosVisibles] =
     useState(false);
   const [establecimientosVisibles, setEstablecimientosVisibles] =
     useState(false);
@@ -135,6 +138,34 @@ const ManageCircuit = () => {
     }
   };
 
+  const toggleResultadosDepartamentos = async () => {
+    if (resultadosDepartamentosVisibles) {
+      setResultadosDepartamentosVisibles(false);
+      return;
+    }
+
+    if (resultadosDepartamentos.length > 0) {
+      setResultadosDepartamentosVisibles(true);
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(
+        "http://localhost:3000/api/circuitos/departamentos"
+      );
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const data = await res.json();
+      setResultadosDepartamentos(data);
+      setResultadosDepartamentosVisibles(true);
+    } catch (err) {
+      setError(`Error al obtener resultados por departamento: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Función para cambiar el tipo de vista usando la clave compuesta
   const cambiarTipoVista = (idCircuito, idEstablecimiento) => {
     const claveCircuito = crearClaveCircuito(idCircuito, idEstablecimiento);
@@ -241,7 +272,111 @@ const ManageCircuit = () => {
             ? "Ocultar Resultados Globales"
             : "🌍 Ver Resultados Globales"}
         </button>
+
+        <button
+          onClick={toggleResultadosDepartamentos}
+          className={`load-button departamentos-results-button ${
+            resultadosDepartamentosVisibles ? "active" : ""
+          }`}
+        >
+          {resultadosDepartamentosVisibles
+            ? "Ocultar Resultados por Departamento"
+            : "📍 Ver Ganadores por Departamento"}
+        </button>
       </div>
+
+      {/* Sección de Resultados por Departamento */}
+      {resultadosDepartamentosVisibles && (
+        <div className="resultados-departamentos-section">
+          <h3 className="resultados-departamentos-title">
+            🏆 Ganadores por Departamento
+          </h3>
+
+          {resultadosDepartamentos.length > 0 ? (
+            <div>
+              <table className="tabla-resultados tabla-departamentos">
+                <thead>
+                  <tr className="header-departamentos">
+                    <th className="col-departamento">Departamento</th>
+                    <th className="col-partido-candidato">Partido Ganador</th>
+                    <th className="col-candidato-principal">
+                      Candidato Principal
+                    </th>
+                    <th className="col-votos-validos">Votos Válidos</th>
+                    <th className="col-votos-blanco">Votos en Blanco</th>
+                    <th className="col-total">Total de Votos</th>
+                    <th className="col-porcentaje">% del Total Nacional</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(() => {
+                    const totalVotosNacional = resultadosDepartamentos.reduce(
+                      (sum, dept) => sum + dept.votos_totales,
+                      0
+                    );
+
+                    return resultadosDepartamentos.map((dept, index) => {
+                      const porcentaje = totalVotosNacional
+                        ? (
+                            (dept.votos_totales / totalVotosNacional) *
+                            100
+                          ).toFixed(1) + "%"
+                        : "0%";
+
+                      return (
+                        <tr
+                          key={dept.departamento}
+                          className={`fila-departamento ${
+                            index % 2 === 0 ? "par" : "impar"
+                          }`}
+                        >
+                          <td className="col-departamento">
+                            <strong>{dept.departamento}</strong>
+                          </td>
+                          <td className="col-partido-candidato">
+                            {dept.partido_candidato}
+                          </td>
+                          <td className="col-candidato-principal">
+                            {dept.candidato_principal}
+                            <br />
+                            <small style={{ color: "#666" }}>
+                              Lista: {dept.lista_principal}
+                            </small>
+                          </td>
+                          <td className="col-votos-validos">
+                            {dept.votos_validos.toLocaleString()}
+                          </td>
+                          <td className="col-votos-blanco">
+                            {dept.votos_en_blanco > 0
+                              ? `+${dept.votos_en_blanco.toLocaleString()}`
+                              : "0"}
+                          </td>
+                          <td className="col-total">
+                            <strong>
+                              {dept.votos_totales.toLocaleString()}
+                            </strong>
+                          </td>
+                          <td className="col-porcentaje">{porcentaje}</td>
+                        </tr>
+                      );
+                    });
+                  })()}
+                </tbody>
+              </table>
+
+              <div className="nota-explicativa">
+                ℹ️ <strong>Nota:</strong> Se muestra el partido ganador de cada
+                departamento junto con su candidato más votado. Los votos en
+                blanco se suman al partido ganador de cada departamento.
+              </div>
+            </div>
+          ) : (
+            <p className="no-resultados">
+              No hay resultados por departamento disponibles.
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Sección de Resultados Globales */}
       {resultadosGlobalesVisibles && (
@@ -257,6 +392,9 @@ const ManageCircuit = () => {
                   <tr className="header-globales">
                     <th className="col-posicion">Posición</th>
                     <th className="col-partido">Partido</th>
+                    <th className="col-candidato-principal">
+                      Candidato Principal
+                    </th>
                     <th className="col-votos-validos">Votos Válidos</th>
                     <th className="col-votos-blanco">Votos en Blanco</th>
                     <th className="col-total">Total de Votos</th>
@@ -297,6 +435,13 @@ const ManageCircuit = () => {
                           <td className="col-partido">
                             {partido.partido}
                             {partido.es_ganador && " 👑"}
+                          </td>
+                          <td className="col-candidato-principal">
+                            {partido.candidato_principal}
+                            <br />
+                            <small style={{ color: "#666" }}>
+                              Lista: {partido.lista_principal}
+                            </small>
                           </td>
                           <td className="col-votos-validos">
                             {partido.votos_validos.toLocaleString()}
