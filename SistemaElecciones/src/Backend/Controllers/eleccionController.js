@@ -18,3 +18,19 @@ export const obtenerEleccionActiva = async (req, res) => {
     res.status(500).json({ message: "Error interno al obtener elección activa." });
   }
 };
+
+export const createElection = async (req, res) => {
+  const { nombre, fecha, tipo } = req.body;
+
+  try {
+    await db.execute(`
+      INSERT INTO ELECCION (nombre, fecha, tipo, estado)
+      VALUES (?, ?, ?, 'inactiva')
+    `, [nombre, fecha, tipo]);
+
+    res.status(201).json({ message: "Elección creada correctamente" });
+  } catch (err) {
+    console.error("Error al crear elección:", err);
+    res.status(500).json({ message: "Error interno al crear elección" });
+  }
+};

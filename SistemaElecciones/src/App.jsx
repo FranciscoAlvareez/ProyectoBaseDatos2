@@ -8,8 +8,11 @@ import Navbar from "./Views/navbar";
 import "./Styles/globalConfig.css";
 import RegisterVoter from './Views/registerVoter';
 import Vote from "./Views/vote";
+import CreateElection from "./Views/createElecction";
 import ManageCircuit from './Views/manageCircuit';
 import VoteObserved from "./Views/voteObserved";
+import CreatePartido from "./Views/createPartido";
+import CreateLista from './Views/createLista';
 
 function LayoutWithNavbar({ children }) {
   const { user } = useAuth();
@@ -44,9 +47,24 @@ function App() {
                   <VoteObserved />
                 </ProtectedRoute>
             }/>
-            <Route path="/votar" element={
+            <Route path="/admin/registerVoter" element={
               <ProtectedRoute allowedRoles="admin">
                 <RegisterVoter />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/createElection" element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <CreateElection />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/createPartido" element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <CreatePartido />
+              </ProtectedRoute>
+            } />
+             <Route path="/admin/createLista" element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <CreateLista />
               </ProtectedRoute>
             } />
             <Route path="admin/circuitos" element={

@@ -1,0 +1,50 @@
+.create-partido-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 60px);
+  background-color: var(--gris-claro);
+  font-family: var(--fuente-principal);
+  padding: 20px;
+}
+
+.create-partido-form {
+  background-color: var(--blanco);
+  padding: 30px;
+  border-radius: var(--radio);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.create-partido-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--azul-bandera);
+}
+
+.create-partido-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: var(--radio);
+  font-size: 16px;
+}
+
+.create-partido-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--azul-bandera);
+  color: var(--blanco);
+  border: none;
+  border-radius: var(--radio);
+  font-size: 16px;
+  cursor: pointer;
+  transition: var(--transicion);
+}
+
+.create-partido-form button:hover {
+  background-color: var(--amarillo-sol);
+  color: var(--gris-oscuro);
+}
